@@ -31,6 +31,7 @@ from cloud_foundation_toolkit.dm_utils import get_deployment_output
 from cloud_foundation_toolkit.dm_utils import parse_dm_output_url
 from cloud_foundation_toolkit.dm_utils import parse_dm_output_token
 from cloud_foundation_toolkit.yaml_utils import CFTBaseYAML
+from cloud_foundation_toolkit.yaml_utils import isinstance_scalarstring
 
 Node = namedtuple('Node', ['project', 'deployment'])
 
@@ -342,10 +343,13 @@ class Deployment(DM_API):
                 yaml_tree[i] = self.yaml_replace(v)
 
     def yaml_replace(self, v):
-        if isinstance(v, str):
-            match = DM_OUTPUT_QUERY_REGEX.match(v)
-            if match is not None:
-                return self.get_dm_output(match)
+        if isinstance(v, str) or isinstance_scalarstring(v):
+            interpolated = str(v)
+            matches = DM_OUTPUT_QUERY_REGEX.findall(interpolated)
+            for match in matches:
+                output = self.get_dm_output(match)
+                interpolated = DM_OUTPUT_QUERY_REGEX.sub(output, interpolated, 1)
+            return interpolated
         else:
             self.yaml_walk(v)  ## Not string, recursive walk
         return v
@@ -363,12 +367,11 @@ class Deployment(DM_API):
         Returns: A string with the value of the deployment output
         """
 
-        for k, v in match.groupdict().items():
-            if not v:
-                continue
+        k, v = match
+        if v:
             if k == 'url':
                 query_attributes = parse_dm_output_url(v, self._config.project)
-            elif k == 'token':
+            else:
                 query_attributes = parse_dm_output_token(
                     v,
                     self._config.project
