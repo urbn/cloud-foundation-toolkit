@@ -1,4 +1,5 @@
 from ruamel.yaml import YAML
+from ruamel.yaml import scalarstring
 from ruamel.yaml.compat import StringIO
 
 
@@ -12,3 +13,7 @@ class CFTBaseYAML(YAML):
         YAML.dump(self, data, stream, **kwargs)
         if inefficient:
             return stream.getvalue()
+
+
+def isinstance_scalarstring(value):
+    return any(isinstance(value, getattr(globals()["scalarstring"], s)) for s in scalarstring.__all__)
