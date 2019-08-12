@@ -11,8 +11,7 @@ resources:
     type: instance_template.py
     properties:
       diskImage: projects/ubuntu-os-cloud/global/images/family/ubuntu-1804-lts
-      networks:
-        - default
+      network: default
       machineType: f1-micro
       tags:
         items:

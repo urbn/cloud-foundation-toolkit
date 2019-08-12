@@ -18,6 +18,5 @@ resources:
       targetSize: 3
       instanceTemplate:
         diskImage: projects/ubuntu-os-cloud/global/images/family/ubuntu-1804-lts
-        networks:
-          - name: default
+        network: default
         machineType: f1-micro

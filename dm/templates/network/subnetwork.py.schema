@@ -17,8 +17,6 @@ info:
   author: Sourced Group Inc.
   description: Creates a subnetwork.
 
-additionalProperties: false
-
 required:
   - network
   - region

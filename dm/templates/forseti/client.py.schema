@@ -21,8 +21,6 @@ info:
 imports:
   - path: client.py
 
-additionalProperties: false
-
 required:
   - project
   - zone

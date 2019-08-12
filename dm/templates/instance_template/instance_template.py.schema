@@ -18,38 +18,27 @@ info:
   description: |
     Creates an instance template.
 
-additionalProperties: false
-
 required:
   - diskImage
+  - network
 
-oneOf:
-  - allOf:
-    - required:
-        - networks
-    - properties:
-        networks:
-          minItems: 1
-    - not:
-        required:
-          - network
-    - not:
-        required:
-          - natIP
-    - not:
-        required:
-          - subnetwork
-    - not:
-        required:
-          - networkIP
-  - allOf:
-    - required:
-        - network
-    - not:
-       required:
-         - networks
-
-definitions:
+properties:
+  name:
+    type: string
+    description: The name of the instance template resource.
+  templateDescription:
+    type: string
+    description: The resource description (optional).
+  instanceDescription:
+    type: string
+    description: |
+      The description of the instance resource the instance template
+      will create (optional).
+  network:
+    type: string
+    description: |
+      The URL or name of the network where the instance is placed;
+      e.g., 'my-custom-network' or 'global/networks/default'.
   hasExternalIp:
     type: boolean
     default: true
@@ -57,7 +46,7 @@ definitions:
       Defines wether the instance will use an external IP from a shared
       ephemeral IP address pool. If this is set to false, the instance
       will not have an external IP.
-  natIP:
+  natIp:
     type: string
     description: |
       An external IP address associated with this instance. Specify an unused
@@ -77,62 +66,12 @@ definitions:
       or partial URL. For example, the following are all valid URLs:
         - https://www.googleapis.com/compute/v1/projects/project/regions/region/subnetworks/subnetwork
         - regions/region/subnetworks/subnetwork
-  networkIP:
+  networkIp:
     type: string
     description: |
       An IPv4 internal network address to assign to the instance for this
       network interface. If not specified by the user, an unused internal IP
       is assigned by the system.
-
-properties:
-  name:
-    type: string
-    description: The name of the instance template resource.
-  templateDescription:
-    type: string
-    description: The resource description (optional).
-  instanceDescription:
-    type: string
-    description: |
-      The description of the instance resource the instance template
-      will create (optional).
-  network:
-    type: string
-    description: |
-      Name of the network the instance will be connected to;
-      e.g., 'my-custom-network' or 'default'.
-  hasExternalIp:
-    $ref: '#/definitions/hasExternalIp'
-  natIP:
-    $ref: '#/definitions/natIP'
-  subnetwork:
-    $ref: '#/definitions/subnetwork'
-  networkIP:
-    $ref: '#/definitions/networkIP'
-  networks:
-    type: array
-    description: |
-      Networks the instance will be connected to;
-      e.g., 'my-custom-network' or 'default'.
-    items:
-      type: object
-      additionalProperties: false
-      required:
-        - name
-      properties:
-        name:
-          type: string
-          description: |
-            Name of the network the instance will be connected to;
-            e.g., 'my-custom-network' or 'default'.
-        hasExternalIp:
-          $ref: '#/definitions/hasExternalIp'
-        natIP:
-          $ref: '#/definitions/natIP'
-        subnetwork:
-          $ref: '#/definitions/subnetwork'
-        networkIP:
-          $ref: '#/definitions/networkIP'
   machineType:
     type: string
     default: n1-standard-1
@@ -142,7 +81,7 @@ properties:
   canIpForward:
     type: boolean
     description: |
-      Defines whether the instance is allowed to send and receive packets
+      Defines whether the instance is allowed to send and receive packets 
       with non-matching destination or source IPs.
   diskType:
     type: string

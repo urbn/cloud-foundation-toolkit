@@ -17,8 +17,6 @@ info:
   author: Sourced Group Inc.
   description: Grants IAM roles to a user on a shared VPC subnetwork
 
-additionalProperties: false
-
 required:
   - subnets
 

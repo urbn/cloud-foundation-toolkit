@@ -26,8 +26,6 @@ imports:
   - path: ../gcs_bucket/gcs_bucket.py
     name: gcs_bucket.py
 
-additionalProperties: false
-
 required:
   - destinationType
   - destinationName

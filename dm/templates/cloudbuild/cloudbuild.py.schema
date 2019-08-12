@@ -23,8 +23,6 @@ info:
 imports:
   - path: cloudbuild.py
 
-additionalProperties: false
-
 required:
   - steps
 

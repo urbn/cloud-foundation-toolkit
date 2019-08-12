@@ -20,8 +20,6 @@ info:
 imports:
   - path: iam_member.py
 
-additionalProperties: false
-
 required:
   - roles
 

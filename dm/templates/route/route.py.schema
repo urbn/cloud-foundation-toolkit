@@ -23,8 +23,6 @@ info:
 imports:
   - path: route.py
 
-additionalProperties: false
-
 required:
   - network
   - routes

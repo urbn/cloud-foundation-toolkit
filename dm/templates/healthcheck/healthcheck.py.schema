@@ -24,8 +24,6 @@ info:
 imports:
   - path: healthcheck.py
 
-additionalProperties: false
-
 required:
   - healthcheckType
 

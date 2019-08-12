@@ -23,8 +23,6 @@ info:
 imports:
   - path: kms.py
 
-additionalProperties: false
-
 required:
   - keyRingName
 

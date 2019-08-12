@@ -20,8 +20,6 @@ info:
     See https://cloud.google.com/load-balancing/docs/forwarding-rules for
     details.
 
-additionalProperties: false
-
 properties:
   name:
     type: string

@@ -31,8 +31,6 @@ imports:
   - path: ../target_proxy/target_proxy.py
     name: target_proxy.py
 
-additionalProperties: false
-
 properties:
   name:
     type: string

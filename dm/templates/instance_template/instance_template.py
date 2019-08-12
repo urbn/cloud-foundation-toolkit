@@ -43,46 +43,38 @@ def create_boot_disk(properties):
     return boot_disk
 
 
-def get_network_interfaces(properties):
-    """ Get the configuration that connects the instance to an existing network
-        and assigns to it an ephemeral public IP if specified.
+def get_network(properties):
+    """ Gets configuration that connects an instance to an existing network
+        and assigns to it an ephemeral public IP.
     """
-    network_interfaces = []
 
-    networks = properties.get('networks', [{
-        "name": properties.get('network'),
-        "hasExternalIp": properties.get('hasExternalIp'),
-        "natIP": properties.get('natIP'),
-        "subnetwork": properties.get('subnetwork'),
-        "networkIP": properties.get('networkIP'),
-    }])
+    network_name = properties.get('network')
+    is_self_link = '/' in network_name or '.' in network_name
 
-    for network in networks:
-        if not '.' in network['name'] and not '/' in network['name']:
-            network_name = 'global/networks/{}'.format(network['name'])
-        else:
-            network_name = network['name']
+    if is_self_link:
+        network_url = network_name
+    else:
+        network_url = 'global/networks/{}'.format(network_name)
 
-        network_interface = {
-            'network': network_name,
+    network_interfaces = {
+        'network': network_url
+    }
+
+    if properties['hasExternalIp']:
+        access_configs = {
+            'name': 'External NAT',
+            'type': 'ONE_TO_ONE_NAT'
         }
 
-        if network['hasExternalIp']:
-            access_configs = {
-                'name': 'External NAT',
-                'type': 'ONE_TO_ONE_NAT'
-            }
+        if 'natIP' in properties:
+            access_configs['natIP'] = properties['natIP']
 
-            if network.get('natIP'):
-                access_configs['natIP'] = network['natIP']
+        network_interfaces['accessConfigs'] = [access_configs]
 
-            network_interface['accessConfigs'] = [access_configs]
-
-        netif_optional_props = ['subnetwork', 'networkIP']
-        for prop in netif_optional_props:
-            if network.get(prop):
-                network_interface[prop] = network[prop]
-        network_interfaces.append(network_interface)
+    netif_optional_props = ['subnetwork', 'networkIP']
+    for prop in netif_optional_props:
+        if prop in properties:
+            network_interfaces[prop] = properties[prop]
 
     return network_interfaces
 
@@ -94,7 +86,7 @@ def generate_config(context):
     name = properties.get('name', context.env['name'])
     machine_type = properties['machineType']
     boot_disk = create_boot_disk(properties)
-    network_interfaces = get_network_interfaces(context.properties)
+    network = get_network(properties)
     instance_template = {
         'name': name,
         'type': 'compute.v1.instanceTemplate',
@@ -104,7 +96,7 @@ def generate_config(context):
                     {
                         'machineType': machine_type,
                         'disks': [boot_disk],
-                        'networkInterfaces': network_interfaces
+                        'networkInterfaces': [network]
                     }
             }
     }
