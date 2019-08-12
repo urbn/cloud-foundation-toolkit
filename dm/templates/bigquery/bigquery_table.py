@@ -54,7 +54,7 @@ def generate_config(context):
             'name': name,
             'properties': properties,
             'metadata': {
-                'dependsOn': [context.properties['datasetId']]
+                'dependsOn': []
             }
         }
     ]
