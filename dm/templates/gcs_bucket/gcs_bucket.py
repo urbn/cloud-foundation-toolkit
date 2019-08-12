@@ -34,6 +34,9 @@ def generate_config(context):
         }
     }
 
+    # WARNING: USING ANY OF THESE MAY BREAK YOUR BUCKET!
+    # They are applied using the bucket UPDATE API, which can strip IAMs if changes
+    # are made here, but not in IAMs.
     optional_props = [
         'billing',
         'location',
@@ -44,7 +47,7 @@ def generate_config(context):
         'logging',
         'lifecycle',
         'labels',
-        'website'
+        'website',
     ]
 
     for prop in optional_props:
@@ -68,6 +71,22 @@ def generate_config(context):
                 }
         }
         resources.append(iam_policy)
+
+    # If CORS provided, configure it separately using the PATCH API
+    # ref: https://cloud.google.com/storage/docs/json_api/v1/buckets/patch
+    storage_provider_type_patch = 'gcp-types/storage-v1:storage.buckets.patch'
+    cors = context.properties.get('cors', [])
+    if cors:
+        cors_patch = {
+            'name': bucket_name + '-cors-patch',
+            'action': (storage_provider_type_patch),
+            'properties': {
+                'bucket': '$(ref.' + bucket_name + '.name)',
+                'project': project_id,
+                'cors': cors
+            }
+        }
+        resources.append(cors_patch)
 
     return {
         'resources':

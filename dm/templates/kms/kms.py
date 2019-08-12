@@ -43,7 +43,7 @@ def generate_config(context):
     for key in properties.get('keys', []):
         key_name = key['cryptoKeyName'].lower()
         crypto_key = {
-            'name': key_name,
+            'name': '{}-{}'.format(keyring_name, key_name),
             'type': provider + '.cryptoKeys',
             'properties':
                 {

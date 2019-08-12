@@ -37,7 +37,6 @@ def generate_config(context):
     ]
 
     # Subnetworks:
-    out = {}
     for subnetwork in context.properties.get('subnetworks', []):
         subnetwork['network'] = network_self_link
         resources.append(
@@ -47,16 +46,6 @@ def generate_config(context):
                 'properties': subnetwork
             }
         )
-
-        out[subnetwork['name']] = {
-            'selfLink': '$(ref.{}.selfLink)'.format(subnetwork['name']),
-            'ipCidrRange': '$(ref.{}.ipCidrRange)'.format(subnetwork['name']),
-            'region': '$(ref.{}.region)'.format(subnetwork['name']),
-            'network': '$(ref.{}.network)'.format(subnetwork['name']),
-            'gatewayAddress': '$(ref.{}.gatewayAddress)'.format(
-                subnetwork['name']
-            )
-        }
 
     return {
         'resources':
@@ -70,10 +59,6 @@ def generate_config(context):
                 {
                     'name': 'selfLink',
                     'value': network_self_link
-                },
-                {
-                    'name': 'subnetworks',
-                    'value': out
                 }
             ]
     }

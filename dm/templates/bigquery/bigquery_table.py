@@ -18,12 +18,13 @@
 def generate_config(context):
     """ Entry point for the deployment resources. """
 
-    name = context.properties['name']
+    table_id = context.properties['name']
+    name = context.env['name']
 
     properties = {
         'tableReference':
             {
-                'tableId': name,
+                'tableId': table_id,
                 'datasetId': context.properties['datasetId'],
                 'projectId': context.env['project']
             },
@@ -58,6 +59,15 @@ def generate_config(context):
         }
     ]
 
+    # Add additional dependencies
+    if 'view' in context.properties and \
+       'additionalDependencies' in context.properties['view']:
+        deps = [
+            d['name']
+            for d in context.properties['view']['additionalDependencies']
+        ]
+        resources[0]['metadata']['dependsOn'].extend(deps)
+
     outputs = [
         {
             'name': 'selfLink',
@@ -90,6 +100,10 @@ def generate_config(context):
         {
             'name': 'numRows',
             'value': '$(ref.{}.numRows)'.format(name)
+        },
+        {
+            'name': 'tableId',
+            'value': table_id
         },
         {
             'name': 'type',

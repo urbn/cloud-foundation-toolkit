@@ -41,7 +41,7 @@ properties:
     type: string
     description: |
       The time when the table expires, in milliseconds since the epoch. If
-      not specified, the table persists indefinitely. Expired tables are 
+      not specified, the table persists indefinitely. Expired tables are
       deleted, and their storage is reclaimed. The defaultTableExpirationMs
       property of the encapsulating dataset can be used to set a default
       expirationTime on newly created tables. For example, 1535739430.
@@ -59,11 +59,11 @@ properties:
       field:
         type: string
         description: |
-          The field to be used for table partitioning. This field must be a top-level 
+          The field to be used for table partitioning. This field must be a top-level
           TIMESTAMP or DATE field. Its mode must be NULLABLE or REQUIRED.
-          If not specified, the table is partitioned by a pseudo-column, 
-          referenced via either '_PARTITIONTIME' as TIMESTAMP type or 
-          '_PARTITIONDATE' as DATE type. 
+          If not specified, the table is partitioned by a pseudo-column,
+          referenced via either '_PARTITIONTIME' as TIMESTAMP type or
+          '_PARTITIONDATE' as DATE type.
       requirePartitionFilter:
         type: boolean
         description: |
@@ -91,6 +91,20 @@ properties:
     type: object
     description: The view definintion.
     properties:
+      additionalDependencies:
+        type: array
+        description: |
+          A list of additional resources the table/view depends on beyond
+          the defined dataset. These may be referenced in the view's SQL
+        items:
+          type: object
+          description: List of resource dependencies
+          required:
+            - name
+          properties:
+            name:
+              type: string
+              description: Resource dependency name (i.e. table name)
       query:
         type: string
         description: |
@@ -113,7 +127,7 @@ properties:
               type: string
               description: |
                 The inline resource that contains code for a user-defined
-                function (UDF). An equivalent a URI for a file containing 
+                function (UDF). An equivalent a URI for a file containing
                 the same code.
             - resourceUri:
               type: string
@@ -146,9 +160,9 @@ properties:
             The field data type. Possible values are STRING, BYTES,
             INTEGER, INT64 (same as INTEGER), FLOAT, FLOAT64 (same as
             FLOAT), NUMERIC, BOOLEAN, BOOL (same as BOOLEAN), TIMESTAMP, DATE, TIME,
-            DATETIME, RECORD (indicates that the field contains a nested 
-            schema), and STRUCT (same as RECORD). See details at 
-            https://cloud.google.com/bigquery/docs/schemas and 
+            DATETIME, RECORD (indicates that the field contains a nested
+            schema), and STRUCT (same as RECORD). See details at
+            https://cloud.google.com/bigquery/docs/schemas and
             https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types.
           enum:
             - STRING
@@ -196,7 +210,7 @@ outputs:
     - lastModifiedTime:
         type: string
         description: |
-          The date when the dataset (or any of its tables) was last 
+          The date when the dataset (or any of its tables) was last
           modified, in milliseconds since the epoch.
     - location:
         type: string
@@ -219,14 +233,17 @@ outputs:
         description: |
           The number of rows of data in the table, excluding data in the
           streaming buffer.
+    - tableId:
+        type: string
+        description: The table ID (name) of the created resource.
     - type:
         type: string
         description: |
-          The table type. The following values are supported: 
+          The table type. The following values are supported:
            TABLE - a normal BigQuery table
            VIEW - a virtual table defined by an SQL query
            EXTERNAL - a table that references data stored in an external
-           storage system, such as Google Cloud Storage. 
+           storage system, such as Google Cloud Storage.
           The default value is TABLE.
 
 documentation:

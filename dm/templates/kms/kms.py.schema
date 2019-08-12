@@ -65,9 +65,9 @@ properties:
           description: |
             The time when the Key Management Service will automatically
             create a new version of the CryptoKey and mark the new version
-            as primary. Keys with the ENCRYPT_DECRYPT purpose support 
-            automatic rotation. For all other keys, this field must be left 
-            blank. The timestamp is in the RFC3339 UTC "Zulu" format, 
+            as primary. Keys with the ENCRYPT_DECRYPT purpose support
+            automatic rotation. For all other keys, this field must be left
+            blank. The timestamp is in the RFC3339 UTC "Zulu" format,
             accurate to nanoseconds; e.g., "2014-10-02T15:01:23.045123456Z".
         rotationPeriod:
           type: string
@@ -81,15 +81,15 @@ properties:
         versionTemplate:
           type: object
           description: |
-            The template that controls properties of new CryptoKeyVersion 
-            instances created by either cryptoKeyVersions.create or 
+            The template that controls properties of new CryptoKeyVersion
+            instances created by either cryptoKeyVersions.create or
             auto-rotation.
           properties:
             protectionLevel:
               type: string
               default: SOFTWARE
               description: |
-                The level of protection to use when creating a CryptoKeyVersion 
+                The level of protection to use when creating a CryptoKeyVersion
                 based on the template.
               enum:
                 - PROTECTION_LEVEL_UNSPECIFIED
