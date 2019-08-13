@@ -54,10 +54,14 @@ def generate_config(context):
             'name': name,
             'properties': properties,
             'metadata': {
-                'dependsOn': []
+                'dependsOn': []  # NB Table dependencies must be added explicitly
             }
         }
     ]
+
+    # Add explicit dependencies for intra-deployment resources
+    if 'dependsOn' in context.properties:
+        resources[0]['metadata'] = {'dependsOn': context.properties['dependsOn']}
 
     # Add additional dependencies
     if 'view' in context.properties and \

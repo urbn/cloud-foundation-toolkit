@@ -34,6 +34,10 @@ properties:
     type: string
     description: |
       The ID of the dataset the table belongs to.
+  dependsOn:
+    type: array
+    items:
+      type: string
   friendlyName:
     type: string
     description: A descriptive name for the table.
